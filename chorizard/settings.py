@@ -14,16 +14,12 @@ import os
 from pathlib import Path
 
 
-def is_truthy(value):
-    return value.lower() in {"true", "t", "1"}
+def is_env_truthy(key, default):
+    return os.getenv(key, default).lower() in {"true", "t", "1"}
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv(
@@ -31,7 +27,7 @@ SECRET_KEY = os.getenv(
 )
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = is_truthy(os.getenv("DEBUG", "false"))
+DEBUG = is_env_truthy("DEBUG", "false")
 
 ALLOWED_HOSTS = []
 
@@ -84,7 +80,9 @@ WSGI_APPLICATION = "chorizard.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "NAME": "chorizard",
+        "HOST": os.getenv("DB_HOST", "localhost"),
+        "PORT": int(os.getenv("DB_PORT", "5432")),
     }
 }
 

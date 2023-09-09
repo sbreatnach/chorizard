@@ -1,7 +1,25 @@
+version: "3.8"
 services:
-  web:
-    build: .
-    ports:
-      - "8000:5000"
   db:
-    image: "postgres:15.4"
+    build: ./dockerfiles/postgresql
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - dbdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+  auth:
+    image: "bitnami/keycloak:22.0.1"
+    environment:
+      KEYCLOAK_DATABASE_HOST: db
+      KEYCLOAK_DATABASE_NAME: keycloak
+      KEYCLOAK_DATABASE_USER: postgres
+      KEYCLOAK_DATABASE_PASSWORD: postgres
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+volumes:
+  dbdata:
