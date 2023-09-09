@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "chorizard"
+version = "0.1.0"
+description = ""
+authors = ["Shane Breatnach <shane@somethinginterestinghere.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+django = "^4.2.5"
+
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.0.287"
+pre-commit = "^3.4.0"
+black = "^23.9.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
