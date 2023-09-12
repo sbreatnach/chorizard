@@ -17,6 +17,8 @@ services:
       KEYCLOAK_DATABASE_NAME: keycloak
       KEYCLOAK_DATABASE_USER: postgres
       KEYCLOAK_DATABASE_PASSWORD: postgres
+      KEYCLOAK_ADMIN_USER: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
     ports:
       - "8080:8080"
     depends_on:
