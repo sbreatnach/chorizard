@@ -7,7 +7,11 @@ The `urlpatterns` list routes URLs to views. For more information please see:
 from django.contrib import admin
 from django.urls import path, include
 
+from .chores import views
+
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("oidc/", include("mozilla_django_oidc.urls")),
+    path("chores/", include("chorizard.chores.urls")),
+    path("", views.homepage),
 ]

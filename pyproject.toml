@@ -11,6 +11,7 @@ django = "^4.2.5"
 psycopg = "^3.1.10"
 mozilla-django-oidc = "^3.0.0"
 python-dotenv = "^1.0.0"
+jinja2 = "^3.1.2"
 
 
 [tool.poetry.group.dev.dependencies]

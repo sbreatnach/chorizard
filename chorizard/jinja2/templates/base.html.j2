@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    {% block head %}
+    {% block styling %}
+    {% endblock %}
+    <title>{% block title %}{% endblock %}</title>
+    {% endblock %}
+</head>
+<body>
+    {% if request.user.is_authenticated %}
+    <p>Current user: {{ request.user.email }}</p>
+    <form action="{{ url('oidc_logout') }}" method="post">
+        {{ csrf_input }}
+        <input type="submit" value="logout">
+    </form>
+    {% else %}
+    <a href="{{ url('oidc_authentication_init') }}">Login</a>
+    {% endif %}
+    <div id="content">{% block content %}{% endblock %}</div>
+    <div id="footer">
+        {% block footer %}
+        &copy; Copyright 2023 by <a href="http://domain.invalid/">you</a>.
+        {% endblock %}
+    </div>
+</body>
+</html>

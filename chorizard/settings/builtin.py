@@ -6,18 +6,8 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 import os
-from pathlib import Path
-from dotenv import load_dotenv
+from .base import is_env_truthy, BASE_DIR
 
-
-def is_env_truthy(key, default=""):
-    return os.getenv(key, default).lower() in {"true", "t", "1"}
-
-
-load_dotenv(os.getenv("ENV_FILE", ".env"))
-
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv(
@@ -28,6 +18,37 @@ SECRET_KEY = os.getenv(
 DEBUG = is_env_truthy("DEBUG", "true")
 
 ALLOWED_HOSTS = []
+
+LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")
+VENDOR_LOG_LEVEL = os.getenv("VENDOR_LOG_LEVEL", "ERROR")
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "common": {
+            "()": "django.utils.log.ServerFormatter",
+            "format": "[{server_time}] {message}",
+            "style": "{",
+        }
+    },
+    "handlers": {
+        "console": {
+            "level": "DEBUG",
+            "class": "logging.StreamHandler",
+            "formatter": "common",
+        },
+    },
+    "loggers": {
+        "mozilla_django_oidc": {
+            "handlers": ["console"],
+            "level": VENDOR_LOG_LEVEL,
+        },
+        "": {
+            "handlers": ["console"],
+            "level": LOG_LEVEL,
+        },
+    },
+}
 
 
 # Application definition
@@ -40,6 +61,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "mozilla_django_oidc",
+    "chorizard.chores",
 ]
 
 MIDDLEWARE = [
@@ -55,11 +77,22 @@ MIDDLEWARE = [
 
 AUTHENTICATION_BACKENDS = [
     "mozilla_django_oidc.auth.OIDCAuthenticationBackend",
+    "django.contrib.auth.backends.ModelBackend",
 ]
 
 ROOT_URLCONF = "chorizard.urls"
 
 TEMPLATES = [
+    {
+        "BACKEND": "django.template.backends.jinja2.Jinja2",
+        "DIRS": [
+            BASE_DIR / "jinja2" / "templates",
+        ],
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "environment": "chorizard.jinja2.environment",
+        },
+    },
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
         "DIRS": [],
@@ -87,6 +120,8 @@ DATABASES = {
         "NAME": "chorizard",
         "HOST": os.getenv("DB_HOST", "localhost"),
         "PORT": int(os.getenv("DB_PORT", "5432")),
+        "USER": os.getenv("DB_USER", "postgres"),
+        "PASSWORD": os.getenv("DB_PASSWORD", "postgres"),
     }
 }
 
@@ -112,30 +147,3 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-
-# OIDC config options as per mozilla_django_oidc.
-# can get most of these from Keycloak at discovery endpoint:
-# http://localhost:8080/realms/chorizard/.well-known/openid-configuration
-OIDC_OP_JWKS_ENDPOINT = os.getenv(
-    "OIDC_JWKS_ENDPOINT",
-    "http://keycloak:8080/realms/chorizard/protocol/openid-connect/certs",
-)
-OIDC_RP_CLIENT_ID = os.getenv("OIDC_CLIENT_ID", "account")
-OIDC_RP_CLIENT_SECRET = os.getenv(
-    "OIDC_CLIENT_SECRET", "ZstDq0nBEwbjGNVcHWXizxEH3qOZio8X"
-)
-OIDC_OP_AUTHORIZATION_ENDPOINT = os.getenv(
-    "OIDC_AUTH_ENDPOINT",
-    "http://keycloak:8080/realms/chorizard/protocol/openid-connect/auth",
-)
-OIDC_OP_TOKEN_ENDPOINT = os.getenv(
-    "OIDC_TOKEN_ENDPOINT",
-    "http://keycloak:8080/realms/chorizard/protocol/openid-connect/token",
-)
-OIDC_OP_USER_ENDPOINT = os.getenv(
-    "OIDC_USER_ENDPOINT",
-    "http://localhost:8080/realms/chorizard/protocol/openid-connect/userinfo",
-)
-
-LOGIN_REDIRECT_URL = "/"
-LOGOUT_REDIRECT_URL = "/"
