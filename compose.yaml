@@ -23,5 +23,18 @@ services:
       - "8080:8080"
     depends_on:
       - db
+  permissions:
+    build: ./dockerfiles/spicedb
+    command:
+      - serve
+    environment:
+      SPICEDB_DATASTORE_ENGINE: postgres
+      SPICEDB_DATASTORE_CONN_URI: postgres://postgres:postgres@db:5432/spicedb
+      SPICEDB_GRPC_PRESHARED_KEY: dummy
+      SPICEDB_TELEMETRY_ENDPOINT: ""
+    ports:
+      - "50051:50051"
+    depends_on:
+      - db
 volumes:
   dbdata:
