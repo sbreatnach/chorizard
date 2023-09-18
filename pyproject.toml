@@ -12,12 +12,14 @@ psycopg = "^3.1.10"
 mozilla-django-oidc = "^3.0.0"
 python-dotenv = "^1.0.0"
 jinja2 = "^3.1.2"
+authzed = "^0.12.0"
 
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.0.287"
 pre-commit = "^3.4.0"
 black = "^23.9.0"
+isort = "^5.12.0"
 
 [build-system]
 requires = ["poetry-core"]

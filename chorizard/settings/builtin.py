@@ -6,8 +6,8 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 import os
-from .base import is_env_truthy, BASE_DIR
 
+from .base import BASE_DIR, is_env_truthy
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv(

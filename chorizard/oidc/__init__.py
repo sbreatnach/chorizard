@@ -1,5 +1,6 @@
-from django.conf import settings
 from urllib.parse import quote_plus
+
+from django.conf import settings
 
 
 def provider_logout_url(request):
