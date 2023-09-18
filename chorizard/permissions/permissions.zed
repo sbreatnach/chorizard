@@ -1,0 +1,21 @@
+definition user {}
+
+definition parents {
+    relation member: user
+
+    permission membership = member
+}
+
+definition children {
+    relation member: user
+
+    permission membership = member
+}
+
+definition chore {
+  relation editor: parents#membership
+  relation viewer: children#membership
+
+  permission view = editor + viewer
+  permission edit = editor
+}
