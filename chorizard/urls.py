@@ -12,6 +12,7 @@ from .chores import views
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("oidc/", include("mozilla_django_oidc.urls")),
-    path("chores/", include("chorizard.chores.urls")),
+    path("chores/", include("chorizard.chores.urls", namespace="chores")),
+    path("family/", include("chorizard.family.urls", namespace="family")),
     path("", views.homepage),
 ]

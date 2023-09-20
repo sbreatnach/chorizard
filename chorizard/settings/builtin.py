@@ -61,6 +61,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "mozilla_django_oidc",
+    "chorizard.family",
     "chorizard.chores",
 ]
 
@@ -124,6 +125,8 @@ DATABASES = {
         "PASSWORD": os.getenv("DB_PASSWORD", "postgres"),
     }
 }
+
+AUTH_USER_MODEL = "chorizard.family.User"
 
 
 # Internationalization
