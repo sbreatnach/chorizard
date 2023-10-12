@@ -1,5 +1,11 @@
 definition user {}
 
+definition families {
+    relation member: parents#membership | children#membership
+
+    permission membership = member
+}
+
 definition parents {
     relation member: user
 

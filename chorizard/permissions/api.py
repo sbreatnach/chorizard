@@ -1,39 +1,16 @@
 import dataclasses
 import enum
 import logging
-from dataclasses import dataclass
 from http import HTTPStatus
-from typing import Optional
 
+from django.conf import settings
 import requests
+
+from .data import Relationship, Permission, RelationshipFilter
 
 logger = logging.getLogger(__name__)
 
-
-class Reference:
-    reference_type: str
-    reference_id: str
-
-
-class Subject:
-    object: Reference
-    optional_relation: Optional[str]
-
-
-@dataclass
-class Relationship:
-    resource: Reference
-    relation: str
-    subject: Subject
-    caveat: Optional[dict]
-
-
-@dataclass
-class Permission:
-    resource: Reference
-    permission: str
-    subject: Subject
-    context: Optional[dict]
+__all__ = ["API"]
 
 
 class PermissionEvaluation(enum.Enum):
@@ -89,6 +66,23 @@ class SpiceDbApi:
             )
         return consistency
 
+    def get_relationships(
+        self,
+        relationship_filter: RelationshipFilter,
+        limit: int = None,
+        cursor=None,
+        **kwargs,
+    ):
+        payload = {
+            "consistency": self.determine_consistency(**kwargs),
+            "relationship_filter": dataclasses.asdict(relationship_filter),
+        }
+        if limit is not None:
+            payload["optional_limit"] = limit
+        if cursor is not None:
+            payload["cursor"] = cursor
+        return self.make_request("/v1/relationships/read", payload, **kwargs)
+
     def save_relationship(
         self,
         relationship: Relationship,
@@ -119,3 +113,6 @@ class SpiceDbApi:
         payload["consistency"] = self.determine_consistency(**kwargs)
         response = self.make_request("/v1/permissions/check", payload, **kwargs)
         return response["permissionship"] == PermissionEvaluation.HasPermission.value
+
+
+API = SpiceDbApi(settings.SPICEDB_API_URL, settings.SPICEDB_API_TOKEN)

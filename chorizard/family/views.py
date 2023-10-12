@@ -1,5 +1,8 @@
-# from django.shortcuts import render
+from django.shortcuts import render
 
 
 def manage(request):
-    pass
+    context = {
+        "families": request.user.families.all(),
+    }
+    return render(request, "manage.html.j2", context=context)

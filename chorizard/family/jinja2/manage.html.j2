@@ -1,8 +1,16 @@
 {% extends "base.html.j2" %}
-{% block title %}Home{% endblock %}
+{% block title %}Manage{% endblock %}
 {% block content %}
-    <h1>Family</h1>
-    <p>
-      Chorizard! 🐉
-    </p>
+    {% for family in families %}
+    <h1>Family {{ family.name }}</h1>
+    <div>
+        <ul>
+            {% for user, label in family.labelled_users %}
+            <li>
+                {{ label }}
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endfor %}
 {% endblock %}
