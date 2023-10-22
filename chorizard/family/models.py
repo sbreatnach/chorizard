@@ -49,6 +49,7 @@ class User(AbstractUser):
     families = models.ManyToManyField(
         Family, related_name="users", through="FamilyRelation"
     )
+    logo = models.ImageField()
 
 
 class FamilyRelation(models.Model):

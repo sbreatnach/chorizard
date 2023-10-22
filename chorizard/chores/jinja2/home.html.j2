@@ -1,0 +1,38 @@
+{% extends "base.html.j2" %}
+{% block title %}Home{% endblock %}
+{% block content %}
+    <h1>Home</h1>
+    <p>
+      Chorizard! 🐉
+      <div>
+        <a href="{{ url("family:manage") }}>Manage Family</a>
+      </div>
+      <div>
+          {% for family in families %}
+          {% for child in family.children %}
+          <form name="{{ child.id }}" method="post">
+              <img src="{{ child.logo }}"/>
+              <p>
+                  {{ child.name }}
+                  <br />
+                  Current total: {{ len(child.chores) }}
+              </p>
+
+              {% for chore in child.chores %}
+              <label>{{ chore.name }} ({{ chore.created_on }})</label>
+              {% endfor %}
+
+              {% if show_new_chore %}
+              {{ chore_form }}
+              <button name="save">Save</button>
+
+              {% else %}
+              <a href="?show_new_chore=true">Add new chore</a>
+
+              {% endif %}
+          </form>
+          {% endfor %}
+          {% endfor %}
+      </div>
+    </p>
+{% endblock %}

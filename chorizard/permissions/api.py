@@ -1,3 +1,6 @@
+"""
+Contains the API class for interacting with the Authzed API service.
+"""
 import dataclasses
 import enum
 import logging

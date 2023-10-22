@@ -14,5 +14,5 @@ urlpatterns = [
     path("oidc/", include("mozilla_django_oidc.urls")),
     path("chores/", include("chorizard.chores.urls", namespace="chores")),
     path("family/", include("chorizard.family.urls", namespace="family")),
-    path("", views.homepage),
+    path("", views.HomeView.as_view()),
 ]

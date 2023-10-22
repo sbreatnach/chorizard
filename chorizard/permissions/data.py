@@ -1,3 +1,6 @@
+"""
+Definitions of the public data models used by Authzed for all API interactions.
+"""
 from dataclasses import dataclass
 from typing import Optional
 
@@ -59,7 +62,15 @@ class RelationshipFilter:
     optional_subject_filter: Optional[SubjectFilter]
 
 
-def as_reference(reference_mapping, model_instance):
+def as_reference(reference_mapping, model_instance) -> Reference:
+    """
+    Using the given map of classes to the corresponding Authzed reference name,
+    returns a Reference instance for the given Django model instance intended
+    for use in Authzed queries.
+
+    Intended to be used as a partial function that is created once using the
+    reference mapping and then invoked for any model instances.
+    """
     return Reference(
         reference_type=reference_mapping.get(model_instance.__class__),
         reference_id=str(model_instance.id),
